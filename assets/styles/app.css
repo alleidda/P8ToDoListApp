@@ -1,0 +1,49 @@
+@import url("~bootstrap/dist/css/bootstrap.min.css");
+@import url("~bootstrap-icons/font/bootstrap-icons.min.css");
+
+* {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: normal;
+}
+
+#main-nav {
+    background: #e3f2fd;
+}
+
+#main-nav #nav-title {
+    color: #2E6CA3;
+    transition: color 100ms;
+}
+
+#main-nav a:hover #nav-title {
+    color: #23527c;
+    transition: color 260ms;
+}
+
+.crop-header-image {
+    max-height: 180px;
+    object-fit: cover;
+}
+
+footer hr {
+    border-top: 1px solid #acacac;
+    margin: 20px 0;
+}
+
+.container {
+    max-width: 1170px;
+}
+
+.card-title {
+    color: #337ab7;
+}
+
+.card-title > i {
+    position: relative;
+    margin-top: -100px;
+    margin-right: 200px;
+}
