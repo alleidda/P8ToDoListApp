@@ -12,6 +12,7 @@ services:
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
         bind:
+            int $usersPerPage: 9
             int $tasksPerPage: 9
 
     # makes classes in src/ available to be used as services

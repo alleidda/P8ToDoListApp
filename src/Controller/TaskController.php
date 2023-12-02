@@ -36,5 +36,16 @@ class TaskController extends AbstractController
         ]);
     }
 
-    
+    #[Route(path: '/app/taches/{id}/supprimer', name: 'app_task_delete')]
+    #[IsGranted(attribute: 'delete', subject: 'task')]
+    public function delete(Task $task, DeleteTaskInterface $deleteTask): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $deleteTask($task);
+
+        $this->addFlash('success', 'Tâche supprimée');
+
+        return $this->redirectToRoute('app_home');
+    }
 }
