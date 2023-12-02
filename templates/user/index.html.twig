@@ -41,7 +41,7 @@
                             <i aria-hidden="true" class="bi bi-pencil-fill fs-5"></i> Modifier
                         </a>
 
-                        <a href="" class="btn btn-sm btn-outline-danger" {{ stimulus_action('validation', 'onClick') }}>
+                        <a href="{{ path('app_users_delete', {id: user.id}) }}" class="btn btn-sm btn-outline-danger" {{ stimulus_action('validation', 'onClick') }}>
                             <i aria-hidden="true" class="bi bi-trash2-fill fs-5"></i> Supprimer
                         </a>
                     </td>
