@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\DTO\ListTasksDTO;
 use App\Entity\Task;
 use App\Entity\User;
+use App\Form\TaskType;
 use App\UseCase\Task\CreateTaskInterface;
 use App\UseCase\Task\DeleteTaskInterface;
 use App\UseCase\Task\ListTasksInterface;
@@ -37,7 +40,7 @@ class TaskController extends AbstractController
     }
 
     #[Route(path: '/app/taches/{id}/supprimer', name: 'app_task_delete')]
-    #[IsGranted(attribute: 'delete', subject: 'task')]
+    // #[IsGranted(attribute: 'delete', subject: 'task')]
     public function delete(Task $task, DeleteTaskInterface $deleteTask): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');

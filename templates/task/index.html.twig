@@ -11,7 +11,7 @@
     <main class="container">
         <h1>Bienvenue sur Todo List, l'application vous permettant de gérer l'ensemble de vos tâches sans effort !</h1>
         <div class="mt-3">
-            {# <a href="{{ path('app_task_create') }}" id="task-add" class="btn btn-primary">Créer une nouvelle tâche</a> #}
+            <a href="" id="task-add" class="btn btn-primary">Créer une nouvelle tâche</a>
             {% if app.request.get('completed') == false %}
                 <a href="{{ path('app_home', {completed: true}) }}" id="completed-tasks"
                    class="btn btn-outline-success">Consulter la liste des tâches terminées</a>
