@@ -69,6 +69,15 @@ class TaskRepository extends ServiceEntityRepository
         ];
     }
 
+    public function getUserTasks(User $user): array
+    {
+        return $this
+            ->createQueryBuilder('task')
+            ->Where('task.user = :user')
+            ->setParameter('user', $user->getId())
+            ;
+    }
+
     /**
      * @return array{
      *     total_items: int,

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\DTO\ListTasksDTO;
+use App\Repository\TaskRepository;
 use App\Entity\User;
 use App\Form\UserType;
 use App\UseCase\Task\ListTasksInterface;
@@ -34,19 +35,43 @@ class UserController extends AbstractController
         ]);
     }
 
-   
-    #[Route(path: '/comptes/{id}/supprimer', name: 'app_users_delete')]
-    public function deleteUser(User $user, DeleteUserInterface $deleteUser, Request $request): Response
+
+
+    #[Route('/comptes/ajouter', name: 'app_users_add')]
+    public function create(Request $request, CreateUserInterface $createUser): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        /* $deleteUser($user);
-        $this->addFlash('success', "L'utilisateur a bien été supprimé"); */
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user, ['validation_groups' => ['Default', 'user:create']]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var string $plainPassword */
+            $plainPassword = $form->get('plainPassword')->getData();
+            $createUser($user, $plainPassword);
+
+            $this->addFlash('success', 'Compte '.$user->getUsername().' crée avec succès');
+
+            return $this->redirectToRoute('app_users');
+        }
+
+        return $this->render('user/create.html.twig', [
+            'form' => $form,
+        ]);
+    }
+
+   
+    #[Route(path: '/comptes/{id}/supprimer', name: 'app_users_delete')]
+    public function deleteUser(User $user ,ListTasksInterface $listTasks,DeleteUserInterface $deleteUser, TaskRepository $tasks, Request $request): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $deleteUser($user);
+        $this->addFlash('success', "L'utilisateur a bien été supprimé");
 
         return $this->redirect((string) $request->headers->get('referer'));
     }
-
-
 
 }
 

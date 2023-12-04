@@ -19,6 +19,17 @@ final class ListTasks implements ListTasksInterface
     /**
      * @throws NonUniqueResultException
      */
+  /*   public function __invoke(User $user, ListTasksDTO $listTasksDTO): array
+    {
+        $page = $listTasksDTO->getPage();
+        $completed = $listTasksDTO->isCompleted();
+        $anon = $listTasksDTO->isAnon();
+
+        return match ($anon) {
+            true => $this->repository->getAnonPaginatedTasks($page),
+            false => $this->repository->getPaginatedTasks($user, $page, $completed),
+        };
+    } */
     public function __invoke(User $user, ListTasksDTO $listTasksDTO): array
     {
         $page = $listTasksDTO->getPage();

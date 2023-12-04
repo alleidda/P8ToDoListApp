@@ -44,6 +44,7 @@ class TaskController extends AbstractController
     public function delete(Task $task, DeleteTaskInterface $deleteTask): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
+        
 
         $deleteTask($task);
 

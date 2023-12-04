@@ -21,3 +21,4 @@ interface ListTasksInterface
      */
     public function __invoke(User $user, ListTasksDTO $listTasksDTO): array;
 }
+
