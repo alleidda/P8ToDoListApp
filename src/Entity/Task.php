@@ -24,6 +24,7 @@ class Task
     private ?bool $completed = null;
 
     #[ORM\ManyToOne(inversedBy: 'task')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?User $user = null;
 
     public function getId(): ?int

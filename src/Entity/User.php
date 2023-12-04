@@ -3,13 +3,17 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use App\Repository\TaskRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[UniqueEntity(fields: ['username'], message: "Ce nom d'utilisateur existe déja.")]
+#[UniqueEntity(fields: ['email'], message: "Cet email existe déja.")]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -29,7 +33,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 30, unique: true)]
+    #[Assert\Length(min: 3, max: 30)]
+    #[Assert\Regex('/^[a-zA-Z0-9]+$/', message: "Le nom d'utilisateur ne peut contenir que des chiffres et/ou des lettres")]
     private ?string $username = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Task::class)]
@@ -136,7 +142,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $this->task->add($task);
             $task->setUser($this);
         }
-
         return $this;
     }
 

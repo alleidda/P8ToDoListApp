@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -21,7 +22,7 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private readonly int $usersPerPage)
     {
         parent::__construct($registry, User::class);
     }
@@ -31,6 +32,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
      */
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
+        // @phpstan-ignore-next-line
         if (!$user instanceof User) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
         }
@@ -40,28 +42,43 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
-//    /**
-//     * @return User[] Returns an array of User objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('u.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @return array{
+     *     total_items: int,
+     *     total_pages: int,
+     *     items_per_page: int,
+     *     page: int,
+     *     embedded: User[]
+     * }
+     *
+     * @throws NonUniqueResultException
+     */
+    public function getPaginatedUsersWithoutUser(User $user, int $page): array
+    {
+        /** @var User[] $users */
+        $users = $this
+            ->createQueryBuilder('u')
+            ->where('u.id != :ulid')
+            ->setParameter('ulid', $user->getId())
+            ->orderBy('u.roles', 'ASC')
+            ->setFirstResult(max($this->usersPerPage * ($page - 1), 0))
+            ->setMaxResults($this->usersPerPage)
+            ->getQuery()
+            ->getResult();
 
-//    public function findOneBySomeField($value): ?User
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        $totalItems = (int) $this->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->where('u.id != :ulid')
+            ->setParameter('ulid', $user->getId())
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return [
+            'total_items' => $totalItems,
+            'total_pages' => (int) ceil($totalItems / $this->usersPerPage),
+            'items_per_page' => $this->usersPerPage,
+            'page' => $page,
+            'embedded' => $users,
+        ];
+    }
 }

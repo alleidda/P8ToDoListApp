@@ -2,13 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\UseCase\Task;
+namespace App\UseCase\User;
 
-use App\DTO\ListTasksDTO;
-use App\Entity\Task;
 use App\Entity\User;
 
-interface ListTasksInterface
+interface ListUsersInterface
 {
     /**
      * @return array{
@@ -16,9 +14,8 @@ interface ListTasksInterface
      *     total_pages: int,
      *     items_per_page: int,
      *     page: int,
-     *     embedded: Task[]
+     *     embedded: User[]
      * }
      */
-    public function __invoke(User $user, ListTasksDTO $listTasksDTO): array;
+    public function __invoke(User $user, int $page): array;
 }
-
