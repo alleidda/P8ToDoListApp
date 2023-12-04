@@ -1,21 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Ajouter un utilisateur - {{ parent() }}{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+    <section class="container">
+        <h1>Gestion des comptes - Ajouter un utilisateur</h1>
 
-    {{ form_errors(registrationForm) }}
-    {{ form_start(registrationForm) }}
-    {{ form_row(registrationForm.email) }}
-    {{ form_row(registrationForm.username) }}
-    {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.roles) }}
+        <a class="btn btn-outline-danger" href="{{ path('app_users') }}">Retour</a>
 
-        <div class="col- col-md mt-5">
-            <input class="btn btn-success" type="submit" name="submit" value="Enregistrer">
-        </div>
-    {{ form_end(registrationForm) }}
+        {{ component('user-form', {form: form}) }}
+
+    </section>
 {% endblock %}
