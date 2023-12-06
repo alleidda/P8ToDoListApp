@@ -59,9 +59,17 @@ class TaskController extends AbstractController
         return $this->render('task/create.html.twig', ['form' => $form->createView()]);
     }
 
+    #[Route(path: '/app/taches/{id}/marquer', name: 'app_task_mark')]
+    public function mark(Task $task, MarkTaskInterface $markTask): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $markTask($task);
+
+        return $this->redirectToRoute('app_home');
+    }
 
     #[Route(path: '/app/taches/{id}/supprimer', name: 'app_task_delete')]
-    // #[IsGranted(attribute: 'delete', subject: 'task')]
     public function delete(Task $task, DeleteTaskInterface $deleteTask): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
