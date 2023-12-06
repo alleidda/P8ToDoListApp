@@ -39,6 +39,27 @@ class TaskController extends AbstractController
         ]);
     }
 
+    #[Route(path: '/app/taches/creer', name: 'app_task_create')]
+    public function create(Request $request, CreateTaskInterface $createTask): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $task = new Task();
+        $form = $this->createForm(TaskType::class, $task);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $createTask($task);
+
+            $this->addFlash('success', 'Tâche créée avec succès');
+
+            return $this->redirectToRoute('app_home');
+        }
+
+        return $this->render('task/create.html.twig', ['form' => $form->createView()]);
+    }
+
+
     #[Route(path: '/app/taches/{id}/supprimer', name: 'app_task_delete')]
     // #[IsGranted(attribute: 'delete', subject: 'task')]
     public function delete(Task $task, DeleteTaskInterface $deleteTask): Response
