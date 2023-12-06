@@ -22,7 +22,8 @@ final class CreateTask implements CreateTaskInterface
         /** @var User $user */
         $user = $this->security->getUser();
 
-        $task->setOwner($user);
+        $task->setUser($user);
+        $task->setCompleted(false);
 
         $this->manager->persist($task);
         $this->manager->flush();
