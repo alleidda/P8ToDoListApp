@@ -26,18 +26,18 @@
                     <td>
                         {% if 'ROLE_ADMIN' in user.roles %}
                             <a title="Enlever le role administrateur" class="btn btn-sm btn-outline-dark"
-                               href="">
+                               href="{{ path('app_users_update_role', {id: user.id}) }}">
                                 {{ (user.roles == 'ROLE_ADMIN') ? 'Administrateur' : 'Administrateur' }}
                             </a>
                         {% else %}
                             <a title="Ajouter le role administrateur" class="btn btn-sm btn-outline-dark"
-                               href="">
+                               href="{{ path('app_users_update_role', {id: user.id}) }}">
                                 {{ (user.roles == 'ROLE_ADMIN') ? 'Administrateur' : 'Utilisateur' }}
                             </a>
                         {% endif %}
                     </td>
                     <td {{ stimulus_controller('validation') }} data-validation-message-value="Souhaitez-vous vraiment supprimer le compte ?">
-                        <a href="" class="btn btn-sm btn-outline-primary">
+                        <a href="{{ path('app_users_update', {id: user.id}) }}" class="btn btn-sm btn-outline-primary">
                             <i aria-hidden="true" class="bi bi-pencil-fill fs-5"></i> Modifier
                         </a>
 

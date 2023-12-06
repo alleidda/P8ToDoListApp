@@ -16,9 +16,9 @@ final class UpdateUserRole implements UpdateUserRoleInterface
 
     public function __invoke(User $user): void
     {
-        match ($user->getRole()) {
-            'ROLE_ADMIN' => $user->setRole('ROLE_USER'),
-            default => $user->setRole('ROLE_ADMIN'),
+        match ($user->getRoles()) {
+            ["ROLE_USER"] => $user->setRoles(["ROLE_ADMIN"]),
+            default => $user->setRoles(["ROLE_USER"]),
         };
 
         $this->manager->persist($user);

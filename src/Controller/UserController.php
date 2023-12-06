@@ -18,6 +18,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserController extends AbstractController
 {
@@ -35,8 +37,69 @@ class UserController extends AbstractController
             'users' => $listUsers($user, $page),
         ]);
     }
-    
+
+    #[Route('/comptes/ajouter', name: 'app_users_add')]
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    {
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // encode the plain password
+            $user->setPassword(
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $form->get('plainPassword')->getData()
+                )
+            );
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_users');
+        }
+
+        return $this->render('registration/register.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
    
+    #[Route(path: '/comptes/{id}/modifier-role', name: 'app_users_update_role')]
+    public function updateUserRole(User $user, UpdateUserRoleInterface $updateUserRole, Request $request): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $updateUserRole($user);
+        $this->addFlash('success', 'Le rôle a bien été mis à jour');
+
+        return $this->redirect((string) $request->headers->get('referer'));
+    }
+
+    #[Route('/comptes/{id}/modifier', name: 'app_users_update')]
+    public function update(User $user, Request $request, UpdateUserInterface $updateUser): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $plainPassword = (is_string($form->get('plainPassword')->getData()) ? $form->get('plainPassword')->getData() : null);
+            $updateUser($user, $plainPassword);
+
+            $this->addFlash('success', 'Compte '.$user->getUsername().' modifié avec succès');
+
+            return $this->redirectToRoute('app_users');
+        }
+
+        return $this->render('user/edit.html.twig', [
+            'form' => $form,
+        ]);
+    }
+
+
     #[Route(path: '/comptes/{id}/supprimer', name: 'app_users_delete')]
     public function deleteUser(User $user ,ListTasksInterface $listTasks,DeleteUserInterface $deleteUser, TaskRepository $tasks, Request $request): Response
     {
