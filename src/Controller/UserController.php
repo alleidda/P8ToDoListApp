@@ -26,6 +26,7 @@ class UserController extends AbstractController
     #[Route('/comptes', name: 'app_users')]
     public function index(ListUsersInterface $listUsers, Request $request): Response
     {
+        
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         /** @var User $user */
@@ -42,7 +43,7 @@ class UserController extends AbstractController
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserType::class, $user, ['validation_groups' => ['Default', 'user:create']]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
