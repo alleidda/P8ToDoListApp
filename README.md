@@ -17,9 +17,6 @@ Next it's recommanded to copy the .env to a .env.local file
 cp .env .env.local
 ```
 
-In the .env.local file you will find a `DATABASE_URL` value. Actually we are using a postgresql database by default, which is started with a
-Docker ccontainer in the following steps. But you can use your own database such as MySQL or SQLite. You will find more options here: https://symfony.com/doc/current/doctrine.html#configuring-the-database
-
 ## Dependencies
 
 ### Install composer and npm dependencies
