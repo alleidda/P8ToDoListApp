@@ -2,7 +2,6 @@
 
 Améliorez une application existante de ToDo & Co - Openclassrooms projet 8
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/9ccf5099699541e08a97e46b0d723f54)](https://app.codacy.com/gh/alleidda/P8ToDoListApp/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 ## Get startedhttps://github.com/alleidda/P8ToDoListApp/tree/main
 
