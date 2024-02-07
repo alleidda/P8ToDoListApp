@@ -38,6 +38,7 @@ class TaskRepository extends ServiceEntityRepository
      */
     public function getPaginatedTasks(User $user, int $page, bool $completed): array
     {
+        
         $query = $this
             ->createQueryBuilder('task')
             ->orderBy('task.id', 'DESC')
@@ -67,6 +68,51 @@ class TaskRepository extends ServiceEntityRepository
             'page' => $page,
             'embedded' => $tasks,
         ];
+
+    
+    }
+
+        /**
+     * @return array{
+     *     total_items: int,
+     *     total_pages: int,
+     *     items_per_page: int,
+     *     page: int,
+     *     embedded: Task[]
+     * }
+     *
+     * @throws NonUniqueResultException
+     */
+    public function getPaginatedTasksAdmin(User $user, int $page, bool $completed): array
+    {
+        
+        $query = $this
+            ->createQueryBuilder('task')
+            ->orderBy('task.id', 'DESC')
+            ->setFirstResult($this->tasksPerPage * ($page - 1))
+            ->setMaxResults($this->tasksPerPage)
+            ->where('task.completed = :completed')
+            ->setParameter('completed', $completed);
+
+        $totalItemsQuery = $this
+            ->createQueryBuilder('task')
+            ->select('COUNT(task.id)')
+            ->where('task.completed = :completed')
+            ->setParameter('completed', $completed);
+
+        /** @var Task[] $tasks */
+        $tasks = $query->getQuery()->getResult();
+        $totalItems = (int) $totalItemsQuery->getQuery()->getSingleScalarResult();
+
+        return [
+            'total_items' => $totalItems,
+            'total_pages' => (int) ceil($totalItems / $this->tasksPerPage),
+            'items_per_page' => $this->tasksPerPage,
+            'page' => $page,
+            'embedded' => $tasks,
+        ];
+
+    
     }
 
     public function getUserTasks(User $user): array

@@ -11,19 +11,12 @@
     <main class="container">
         <h1>Bienvenue {{user.username}} sur Todo List, l'application vous permettant de gérer l'ensemble de vos tâches sans effort !</h1>
         <div class="mt-3">
-            <a href="{{ path('app_task_create') }}" id="task-add" class="btn btn-primary">Créer une nouvelle tâche</a>
-            {% if app.request.get('completed') == false %}
-                <a href="{{ path('app_home', {completed: true}) }}" id="completed-tasks"
-                   class="btn btn-outline-success">Consulter la liste des tâches terminées</a>
-            {% else %}
-                <a href="{{ path('app_home', {completed: false}) }}" id="completed-tasks"
-                   class="btn btn-outline-warning">Consulter la liste des tâches à faire</a>
-            {% endif %}
-            <a href="{{ path('app_home', {anon: true}) }}" id="anon-tasks" class="btn btn-link">Voir les tâches anonymes</a>
-            {% if user.roles[0] == 'ROLE_ADMIN' %}
-            <a href="{{ path('app_home_admin')}}" id="anon-tasks" class="btn btn-link">Voir toutes les tâches</a>
-            {% endif %}
-            
+                <a href="{{ path('app_home_admin', {completed: true}) }}" id="completed-tasks"
+                   class="btn btn-outline-success">Consulter la liste de toutes les tâches terminées</a>
+                <a href="{{ path('app_home_admin', {completed: false}) }}" id="completed-tasks"
+                   class="btn btn-outline-warning">Consulter la liste de toutes les tâches à faire</a>
+                   <a href="{{ path('app_home') }}"
+                   class="btn btn-outline-info">Consulter vos tâches</a>
         </div>
 
         <section class="mt-5">
@@ -33,7 +26,7 @@
                 {% for task in tasks.embedded %}
                     {{ component('task-item', {task: task}) }}
                 {% else %}
-                    <div class="alert alert-info">Vous n'avez pas encore de tâches</div>
+                    <div class="alert alert-info">Pas de tâches</div>
                 {% endfor %}
             </div>
 
@@ -41,7 +34,7 @@
                 total_items: tasks.total_items,
                 total_pages: tasks.total_pages,
                 page: tasks.page,
-                route: 'app_home',
+                route: 'app_home_admin',
                 params: {
                     completed: app.request.get('completed'),
                     anon: app.request.get('anon')

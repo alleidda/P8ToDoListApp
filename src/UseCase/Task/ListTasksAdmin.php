@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\UseCase\Task;
 
-use App\DTO\ListTasksDTO;
+use App\DTO\ListTasksDTOAdmin;
 use App\Entity\User;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\NonUniqueResultException;
 
-final class ListTasks implements ListTasksInterface
+final class ListTasksAdmin implements ListTasksInterfaceAdmin
 {
     public function __construct(
         private readonly TaskRepository $repository
@@ -19,15 +19,15 @@ final class ListTasks implements ListTasksInterface
     /**
      * @throws NonUniqueResultException
      */
-    public function __invoke(User $user, ListTasksDTO $listTasksDTO): array
+    public function __invoke(User $user, ListTasksDTOAdmin $listTasksDTOAdmin): array
     {
-        $page = $listTasksDTO->getPage();
-        $completed = $listTasksDTO->isCompleted();
-        $anon = $listTasksDTO->isAnon();
+        $page = $listTasksDTOAdmin->getPage();
+        $completed = $listTasksDTOAdmin->isCompleted();
+        $anon = $listTasksDTOAdmin->isAnon();
 
         return match ($anon) {
             true => $this->repository->getAnonPaginatedTasks($page),
-            false => $this->repository->getPaginatedTasks($user, $page, $completed),
+            false => $this->repository->getPaginatedTasksAdmin($user, $page, $completed),
         };
     }
 }
