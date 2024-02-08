@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\DTO\ListTasksDTO;
+use App\DTO\ListTasksDTOAdmin;
 use App\Entity\Task;
 use App\Entity\User;
 use App\Form\TaskType;
+use App\Repository\TaskRepository;
 use App\UseCase\Task\CreateTaskInterface;
 use App\UseCase\Task\DeleteTaskInterface;
 use App\UseCase\Task\ListTasksInterface;
+use App\UseCase\Task\ListTasksInterfaceAdmin;
 use App\UseCase\Task\MarkTaskInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,6 +39,27 @@ class TaskController extends AbstractController
 
         return $this->render('task/index.html.twig', [
             'tasks' => $listTasks($user, $listTasksDTO),
+            'user' => $user,
+        ]);
+    }
+
+    #[Route(path: '/app/admin', name: 'app_home_admin')]
+    public function indexadmin(ListTasksInterfaceAdmin $listTasksAdmin, Request $request): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $listTasksDTOAdmin = new ListTasksDTOAdmin(
+            max($request->query->getInt('page', 1), 1),
+            $request->query->getBoolean('completed'),
+            $request->query->getBoolean('anon')
+        );
+
+        return $this->render('task/indexadmin.html.twig', [
+            'tasks' => $listTasksAdmin($user, $listTasksDTOAdmin),
+            'user' => $user,
         ]);
     }
 
