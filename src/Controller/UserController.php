@@ -42,6 +42,8 @@ class UserController extends AbstractController
     #[Route('/comptes/ajouter', name: 'app_users_add')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $user = new User();
         $form = $this->createForm(UserType::class, $user, ['validation_groups' => ['Default', 'user:create']]);
         $form->handleRequest($request);
