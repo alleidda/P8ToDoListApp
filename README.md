@@ -1,5 +1,5 @@
 # Addiëlla AMOUZOUN P8
-
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/d033359d69fb4797afb5223840e073e9)](https://app.codacy.com/gh/alleidda/P8ToDoListApp/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 Améliorez une application existante de ToDo & Co - Openclassrooms projet 8
 
 
