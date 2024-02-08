@@ -1,0 +1,26 @@
+PHPUnit 9.6.13 by Sebastian Bergmann and contributors.
+
+Testing 
+E                                                                   1 / 1 (100%)
+
+Time: 00:00.150, Memory: 26.00 MB
+
+There was 1 error:
+
+1) App\Tests\Application\Controller\UserControllerTest::testIndexUnauthorized
+TypeError: Symfony\Bundle\FrameworkBundle\KernelBrowser::loginUser(): Argument #1 ($user) must be of type object, null given, called in /home/utilisateur/Documents/phpprojects/symfonyprojects/P8ToDoListApp/tests/Application/Controller/UserControllerTest.php on line 37
+
+/home/utilisateur/Documents/phpprojects/symfonyprojects/P8ToDoListApp/vendor/symfony/framework-bundle/KernelBrowser.php:114
+/home/utilisateur/Documents/phpprojects/symfonyprojects/P8ToDoListApp/tests/Application/Controller/UserControllerTest.php:37
+
+ERRORS!
+Tests: 1, Assertions: 0, Errors: 1.
+
+Remaining indirect deprecation notices (2)
+
+  1x: Version detection logic for MySQL will change in DBAL 4. Please specify the version as the server reports it, e.g. "5.7.40" instead of "5.7". (AbstractMySQLDriver.php:81 called by AbstractDriverMiddleware.php:68, https://github.com/doctrine/dbal/pull/5779, package doctrine/orm)
+    1x in UserControllerTest::setUp from App\Tests\Application\Controller
+
+  1x: The "Monolog\Logger" class is considered final. It may change without further notice as of its next major version. You should not extend it from "Symfony\Bridge\Monolog\Logger".
+    1x in UserControllerTest::testIndexUnauthorized from App\Tests\Application\Controller
+
