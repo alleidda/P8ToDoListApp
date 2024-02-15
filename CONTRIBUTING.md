@@ -6,7 +6,7 @@ Welcome to our project's contributing guidelines! We appreciate your interest in
 
 1. For each new feature or bug fix, please create an [issue](https://github.com/alleidda/P8ToDoListApp/issues/new) in the repository.
 2. Assign the relevant labels, including at least: 
-   - Effort
+   - Type
    - Priority
    - Complexity
 
@@ -20,8 +20,6 @@ Welcome to our project's contributing guidelines! We appreciate your interest in
 1. Write PHPUnit tests to cover your code changes.
 
 2. Ensure a minimum code coverage of 80%.
-
-3. You can check code coverage by running the following command: `make phpunit-coverage`
 
 ## Pull Request Submission
 
